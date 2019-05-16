@@ -199,6 +199,13 @@ void USBHost::enumeration(const Transfer_t *transfer)
 			}
 			break;
 		case 3: // request Language ID
+                     // JESSE HACK to make continuumini work
+                    dev->LanguageID = 0;
+		    //dev->enum_state = 7;
+                    if (enumbuf[1]) dev->enum_state = 7;
+                    else if (enumbuf[2]) dev->enum_state = 9;
+                    else dev->enum_state = 11;
+                    break;
 			len = sizeof(enumbuf) - 4;
 			mk_setup(enumsetup, 0x80, 6, 0x0300, 0, len); // 6=GET_DESCRIPTOR
 			queue_Control_Transfer(dev, &enumsetup, enumbuf + 4, NULL);
